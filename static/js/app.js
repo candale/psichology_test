@@ -58,6 +58,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     var imagesTimeout = null;
     var fromImages = false;
     var lastAnagramTime = 0;
+    var randomness = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     var firstStress = null;
     var secondStress = null;
@@ -132,7 +133,24 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
         lastImageIndex = currentImageIndex;
     }
 
+    function generateRandomness() {
+        for(i = 0; i < 10; i++) {
+            randomness[i] = 0;
+        }
+        var randomSoFar = 0;
+        while(randomSoFar != 5) {
+            var no = Math.floor((Math.random() * 10));
+            var pos = no % 10;
+            if(randomness[pos] == 0) {
+                randomness[pos] = 1;
+                randomSoFar += 1;
+            }
+        }
+        console.log(randomness);
+    }
+
     function prepareCurrentImage() {
+        generateRandomness();
         getNextImageIndex();
         $scope.currentImage = images[currentImageIndex];
     }
@@ -352,11 +370,12 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     $scope.nextImage = function(buzz_enabled) {
         $timeout.cancel(imagesTimeout);
         if(buzz_enabled) {
-            var no = Math.random();;
-            if(no < 0.7) {
+            var no = Math.random();
+            if(randomness[imageCount] == 1) {
                 buzz();
             }
         }
+        generateRandomness();
         if(imageCount == 0) {
             imageCount = 1;
             showPage('prepareMsg');
