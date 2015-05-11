@@ -369,7 +369,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
         if(imageCount == 10) {
             imageCount = 1;
             $scope.series += 1;
-            if($scope.series == 2) {
+            if($scope.series == 5) {
                 showPage('slider');
                 fromImages = true;
                 return;
