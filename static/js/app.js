@@ -83,7 +83,6 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
             "anagrams": anagrams,
             "last_anagram_time": lastAnagramTime
         };
-        console.log(data);
         psihoService.sendData(data);
     }
 
@@ -146,11 +145,9 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
                 randomSoFar += 1;
             }
         }
-        console.log(randomness);
     }
 
     function prepareCurrentImage() {
-        generateRandomness();
         getNextImageIndex();
         $scope.currentImage = images[currentImageIndex];
     }
@@ -369,14 +366,9 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
 
     $scope.nextImage = function(buzz_enabled) {
         $timeout.cancel(imagesTimeout);
-        if(buzz_enabled) {
-            var no = Math.random();
-            if(randomness[imageCount] == 1) {
-                buzz();
-            }
-        }
-        generateRandomness();
+
         if(imageCount == 0) {
+            generateRandomness();
             imageCount = 1;
             showPage('prepareMsg');
             $timeout(function() {
@@ -385,7 +377,15 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
             }, 4000);
             return;
         }
+
+        if(buzz_enabled) {
+            var no = Math.random();
+            if(randomness[imageCount - 1] == 1) {
+                buzz();
+            }
+        }
         if(imageCount == 10) {
+            generateRandomness();
             imageCount = 1;
             $scope.series += 1;
             if($scope.series == 5) {
