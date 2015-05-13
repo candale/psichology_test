@@ -47,7 +47,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     var first_quizes = null;
     var second_quizes = [];
     var first_quiz = true;
-    var second_quiz = true;
+    var second_quiz = false;
     var images = null;
     var currentQuizIndex = 0;
     var currentAnagramIndex = 0;
@@ -250,10 +250,11 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     // =================== stress page ======================
     $scope.registerStress = function() {
         if(fromImages) {
-            firstStress = $scope.registeredStress;
+            secondStress = $scope.registeredStress;
             showPage('anagramsDirections');
         } else {
-            secondStress = $scope.registeredStress;
+
+            firstStress = $scope.registeredStress;
             showPage('first_quiz');
         }
         $scope.registeredStress = 0;
@@ -319,6 +320,8 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
         anagrams[currentAnagramIndex].user_answer = ">> skipped <<";
         if(anagrams.length == currentAnagramIndex + 1) {
             showPage('second_quiz');
+            first_quiz = false;
+            second_quiz = true;
         } else {
             currentAnagramIndex += 1;
             $scope.currentAnagram = anagrams[currentAnagramIndex].anagram;

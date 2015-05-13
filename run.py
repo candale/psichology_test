@@ -1,6 +1,5 @@
 import json
 import datetime
-import re
 from os import listdir
 from os.path import isfile, join
 
@@ -17,7 +16,7 @@ def anagrams_page():
 @app.route('/anagrams.json', methods=['GET'])
 def get_anagrams():
     data = []
-    with open('data/anagrams.txt', 'r') as file_:
+    with open('data/display_data/anagrams.txt', 'r') as file_:
         for row in file_:
             correct_word, anagram = row.split()
             data.append({'correct': correct_word, 'anagram': anagram})
@@ -27,7 +26,7 @@ def get_anagrams():
 
 @app.route('/quiz.json', methods=['GET'])
 def get_quiz():
-    with open('data/quiz.txt', 'r') as file_:
+    with open('data/display_data/quiz.txt', 'r') as file_:
         is_desc = True
         header = False
         quizes = []
@@ -68,39 +67,42 @@ def get_data():
     import pprint
     pprint.pprint(request.json)
     data = request.json
-    with open("{}.csv".format(data['name']), 'w') as user_file:
-        user_file.write("Nume,{}\n".format(unicode(data['name'])))
+    with open("data/result_data/{}.csv".format(data['name']), 'w') as user_file:
+        user_file.write("Nume,{}\n".format(data['name'].encode('utf8')))
         user_file.write(
-            "Nivel de stres initial,{}".format(data['first_stress']))
+            "Nivel de stres initial,{}\n".format(data['first_stress']))
         user_file.write(
-            "Nivel de stres dupa test,{}".format(data['second_stress']))
+            "Nivel de stres dupa test,{}\n".format(data['second_stress']))
 
-        user_file.write("\n\nRezultate formulare\nPrimul formular\n")
+        user_file.write("\n\nRezultate formulare\n\nPrimul formular\n\n")
         user_file.write("Intrebare,Raspunsul subiectului")
         for quiz in data['first_quiz']:
             user_file.write("\nDescriere,{}\n".format(
-                unicode(quiz['description'])))
+                quiz['description'].encode('utf8')))
             for question in quiz['questions']:
-                user_file.write("{},{}\n".format(unicode(question['text']),
-                                                 unicode(question['option'])))
+                user_file.write("{},{}\n".format(
+                    question['text'].encode('utf8'),
+                    question['option'].encode('utf8')))
 
-        user_file.write("Al doilea formular\n")
+        user_file.write("\n\nAl doilea formular\n\n")
         user_file.write("Intrebare,Raspunsul subiectului")
         for quiz in data['second_quiz']:
             user_file.write("\nDescriere,{}\n".format(
-                unicode(quiz['description'])))
+                quiz['description'].encode('utf8')))
             for question in quiz['questions']:
-                user_file.write("{},{}\n".format(unicode(question['text']),
-                                                 unicode(question['option'])))
+                user_file.write("{},{}\n".format(
+                    question['text'].encode('utf8'),
+                    question['option'].encode('utf8')))
 
         user_file.write("\n\nAnagrame\n\n")
-        user_file.write("Timpul petrecut la ultima anagrama,{}".format(
-            unicode(data['last_anagram_time'])))
-        user_file.write("Anagrama,Raspunsul corect,Raspunsul subiectului")
+        user_file.write("Timpul petrecut la ultima anagrama,{}\n".format(
+            data['last_anagram_time']))
+        user_file.write("Anagrama,Raspunsul corect,Raspunsul subiectului\n")
         for anagram in data['anagrams']:
             user_file.write("{},{},{}\n".format(
-                unicode(anagram['anagram']), unicode(anagram['correct']),
-                unicode(anagram['user_answer'])))
+                anagram['anagram'].encode('utf8'),
+                anagram['correct'].encode('utf8'),
+                anagram['user_answer'].encode('utf8')))
 
     return Response(status=200)
 
