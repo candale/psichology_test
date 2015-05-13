@@ -1,5 +1,6 @@
 import json
 import datetime
+
 from os import listdir
 from os.path import isfile, join
 
@@ -8,7 +9,7 @@ from flask import Flask, render_template, request, Response
 app = Flask(__name__)
 
 
-@app.route('/anagrams/', methods=['GET'])
+@app.route('/test/', methods=['GET'])
 def anagrams_page():
     return render_template('anagrams.html')
 
@@ -67,7 +68,9 @@ def get_data():
     import pprint
     pprint.pprint(request.json)
     data = request.json
-    with open("data/result_data/{}.csv".format(data['name']), 'w') as user_file:
+    file_name = "data/result_data/{} - {}.csv".format(
+        data['name'], datetime.datetime.now().strftime("%y-%M-%M %H:%M:%S"))
+    with open(file_name, 'w') as user_file:
         user_file.write("Nume,{}\n".format(data['name'].encode('utf8')))
         user_file.write(
             "Nivel de stres initial,{}\n".format(data['first_stress']))

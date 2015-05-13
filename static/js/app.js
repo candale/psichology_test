@@ -265,6 +265,12 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
             showPage('anagram');
             return;
         }
+
+        if(!$scope.userAnagramInput) {
+            alert("Campul este obligatoriu");
+            return;
+        }
+
         stopTimer();
         anagrams[currentAnagramIndex].user_answer = $scope.userAnagramInput;
         if($scope.userAnagramInput === anagrams[currentAnagramIndex].correct) {
