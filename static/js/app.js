@@ -101,13 +101,14 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     function startTimer() {
         timerStarted = true;
         intervalId = $window.setInterval(function() {
-            if($scope.time == 10) {
+            if($scope.time == 600000) {
                 lastAnagramTime = $scope.time;
                 $scope.imagesErrorMsg = 'Prea târziu';
                 $scope.showErrorText = true;
                 anagrams[currentAnagramIndex].user_answer = ">> timeout <<";
                 showPage("imagesError");
 
+                buzz();
                 $timeout(function() {
                     showPage("second_quiz");
                     $scope.showErrorText = false;
