@@ -1,6 +1,6 @@
-Nume,Andrei Candale
-Nivel de stres initial,0.0
-Nivel de stres dupa test,9.0
+Nume,andrei
+Nivel de stres initial,10.0
+Nivel de stres dupa test,10.0
 
 
 Rezultate formulare
@@ -13,25 +13,19 @@ Interesat(ă),foarte putin sau deloc
 Distres,foarte putin sau deloc
 Emoționat(ă),foarte putin sau deloc
 
-Descriere,this is another quiz
-Ii fain afara?,mult
-Iti place la munca?,mult
-
 
 Al doilea formular
 
 Intrebare,Raspunsul subiectului
 Descriere,This is a very nice quiz that you will take to make yourself usefull once in a while
-Interesat(ă),extrem de mult
-Distres,extrem de mult
-Emoționat(ă),extrem de mult
-
-Descriere,this is another quiz
-Ii fain afara?,cool
-Iti place la munca?,cool
+Interesat(ă),foarte putin sau deloc
+Distres,foarte putin sau deloc
+Emoționat(ă),foarte putin sau deloc
 
 
 Anagrame
 
-Timpul petrecut la ultima anagrama,1
+Timpul petrecut la ultima anagrama,10
 Anagrama,Raspunsul corect,Raspunsul subiectului
+aano,oana,>> skipped <<
+ndirea,andrei,>> skipped <<

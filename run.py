@@ -69,7 +69,7 @@ def get_data():
     pprint.pprint(request.json)
     data = request.json
     file_name = "data/result_data/{} - {}.csv".format(
-        data['name'], datetime.datetime.now().strftime("%y-%M-%M %H:%M:%S"))
+        data['name'], datetime.datetime.now().strftime("%y-%M-%M %H-%M-%S"))
     with open(file_name, 'w') as user_file:
         user_file.write("Nume,{}\n".format(data['name'].encode('utf8')))
         user_file.write(

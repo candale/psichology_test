@@ -59,6 +59,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     var fromImages = false;
     var lastAnagramTime = 0;
     var randomness = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var timerStarted = false;
 
     var firstStress = null;
     var secondStress = null;
@@ -92,11 +93,26 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     }
 
     function stopTimer() {
+        timerStarted = false;
         $window.clearInterval(intervalId);
+        $scope.time = 0;
     }
 
     function startTimer() {
+        timerStarted = true;
         intervalId = $window.setInterval(function() {
+            if($scope.time == 10) {
+                lastAnagramTime = $scope.time;
+                $scope.imagesErrorMsg = 'Prea târziu';
+                $scope.showErrorText = true;
+                anagrams[currentAnagramIndex].user_answer = ">> timeout <<";
+                showPage("imagesError");
+
+                $timeout(function() {
+                    showPage("second_quiz");
+                    $scope.showErrorText = false;
+                }, 1000);
+            }
             $scope.time = $scope.time + 1;
             $scope.$apply();
         }, 1000);
@@ -209,6 +225,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
                 $scope.imagesError = true;
                 break;
             case 'finish':
+                stopTimer();
                 $scope.finishPage = true;
                 break;
             case 'correctAnswer':
@@ -271,15 +288,13 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
             return;
         }
 
-        stopTimer();
         anagrams[currentAnagramIndex].user_answer = $scope.userAnagramInput;
-        if($scope.userAnagramInput === anagrams[currentAnagramIndex].correct) {
+        if($scope.userAnagramInput === anagrams[currentAnagramIndex].correct &&
+                currentAnagramIndex != anagrams.length - 1) {
             showPage('correctAnswer');
             var nextPage = "anagram";
             if(anagrams.length == currentAnagramIndex + 1) {
                 nextPage = "second_quiz";
-                first_quiz = false;
-                second_quiz = true;
                 stopTimer();
                 lastAnagramTime = $scope.time;
             }
@@ -300,37 +315,33 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
             buzz();
             showPage('imagesError');
             var nextPage = "anagram";
-            if(anagrams.length == currentAnagramIndex + 1) {
-                nextPage = "second_quiz";
-                first_quiz = false;
-                second_quiz = true;
-                stopTimer();
-                lastAnagramTime = $scope.time;
-            }
             $timeout(function() {
                 showPage(nextPage);
             }, 1000);
-            if(nextPage == "second_quiz") {
-                return;
-            }
-            currentAnagramIndex += 1;
-            $scope.currentAnagram = anagrams[currentAnagramIndex].anagram;
-            $scope.userAnagramInput = "";
         }
-        if(currentAnagramIndex == first_quizes.length - 1) {
+        if(currentAnagramIndex == anagrams.length - 1 && timerStarted == false) {
+            console.log("timer started");
             startTimer();
         }
+        $scope.userAnagramInput = "";
     }
 
     $scope.skipAnagram = function() {
         anagrams[currentAnagramIndex].user_answer = ">> skipped <<";
         if(anagrams.length == currentAnagramIndex + 1) {
+            lastAnagramTime = $scope.time;
             showPage('second_quiz');
             first_quiz = false;
             second_quiz = true;
         } else {
             currentAnagramIndex += 1;
             $scope.currentAnagram = anagrams[currentAnagramIndex].anagram;
+        }
+        if(currentAnagramIndex == anagrams.length - 1 && timerStarted == false) {
+            console.log("timer started");
+            startTimer();
+        } else  {
+            stopTimer();
         }
     }
 
@@ -346,6 +357,8 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
         if(currentQuizIndex + 1 == first_quizes.length) {
             if(first_quiz) {
                 showPage('imagesDirections');
+                first_quiz = false;
+                second_quiz = true;
             } else {
                 showPage("finish");
                 sendData();
