@@ -233,6 +233,13 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
         $scope.sound.play();
     }
 
+    function showAnagram() {
+        setDirectionsCallbackInfo('anagram', null);
+        setDirectionsText(MESSAGES.ANAGRAMS.message,
+                          MESSAGES.ANAGRAMS.buttonText);
+        showPage("directions");
+    }
+
     // ================== page switching functions ======================
     function doPage(page) {
 
@@ -436,7 +443,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
         }
         if(currentQuizIndex + 1 == first_quizes.length) {
             if(first_quiz) {
-                setDirectionsCallbackInfo("anagram", null);
+                setDirectionsCallbackInfo("", showAnagram);
                 $scope.messageText = MESSAGES.PAUZA_ASISTENT.message;
                 $scope.buttonText = MESSAGES.PAUZA_ASISTENT.buttonText;
                 showPage('directions');
