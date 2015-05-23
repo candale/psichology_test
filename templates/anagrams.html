@@ -27,18 +27,6 @@
             </div>
          </div>
 
-         <div class="child" ng-show="anagramsDirectionsShow">
-            <p class="regular-text">În această sarcină, va trebui să rezolvați un număr de anagrame. Anagramele sunt șiruri de
-            litere care trebuie reordonate pentru a forma un cuvânt. De exemplu, LGO este o anagramă pentru
-            cuvântul GOL. Sarcina dumneavoastră este așadar aceea de a rearanja literele într-un cuvânt existent în
-            limba română și de a trece răspunsul în chenarul aferent. Nu aveți o limită de timp, așa că încercați să
-            rezolvați anagramele cât mai bine, iar în cazul în care doriți să treceți peste una dintre ele, aveți
-            opțiunea de a sări peste.
-            </p>
-            <a href="#" ng-click="answerAnagram(true)"
-                     class="btn btn-primary btn-block btn-lg btn-default">Incepe</a>
-         </div>
-
          <!-- ======================== Name page =========================== -->
          <div class="child">
                <div class="form-horizontal" ng-show="nameShow">
@@ -58,11 +46,26 @@
 
          <!-- ======================== slider ======================= -->
          <div class="child" ng-show="sliderShow">
-            <h2 class="col-md-offset-4">Esti stresat?</h2>
+            <h2>
+               Gândindu-vă la acest moment, marcați pe o scală de la 1 la 10 în ce
+               măsură vă simțiți:
+            </h2>
             <br>
             <span>
-               <span><h4>Nivel stres: [[ registeredStress ]]</h4></span>
-               <slider floor="0" ceiling="10" step="1" precision="1" ng-model="registeredStress"></slider>
+               <span><h4>Descurajat: [[ feeling.descurajat ]]</h4></span>
+               <slider floor="1" ceiling="10" step="1" precision="1" ng-model="feeling.descurajat"></slider>
+
+               <span><h4>Furios: [[ feeling.furios ]]</h4></span>
+               <slider floor="1" ceiling="10" step="1" precision="1" ng-model="feeling.furios"></slider>
+
+               <span><h4>Ingrijorat: [[ feeling.ingrijorat ]]</h4></span>
+               <slider floor="1" ceiling="10" step="1" precision="1" ng-model="feeling.ingrijorat"></slider>
+
+               <span><h4>Vinovat: [[ feeling.vinovat ]]</h4></span>
+               <slider floor="1" ceiling="10" step="1" precision="1" ng-model="feeling.vinovat"></slider>
+
+               <span><h4>Trist: [[ feeling.trist ]]</h4></span>
+               <slider floor="1" ceiling="10" step="1" precision="1" ng-model="feeling.trist"></slider>
             </span>
             <br><br>
             <a href="#" ng-click="registerStress()"
@@ -92,20 +95,10 @@
          </div>
 
          <!-- ========================== pictures page =====================-->
-         <div class="child" ng-show="imagesDirectionsShow">
-            <p class="regular-text">În această sarcină vi se vor prezenta câteva serii de imagini. Fiecare imagine prezintă două
-               chenare, unul în stânga, altul în dreapta. Chenarele conțin anumite caracteristici perceptuale. Aceste
-               caracteristici reprezintă patru dimensiuni diferite (culoare, formă, literă, mărimea literei), fiecare
-               dimensiune putând lua două valori distincte (verde/roșu, pătrat/cerc, A/T, literă mică/mare).
-               Veți urmări patru serii a câte zece imagini. Pentru fiecare serie, am desemnat ca fiind corectă
-               una din aceste opt valori menționate. La fiecare imagine, sarcina dumneavoastră va fi să alegeți care
-               dintre cele două chenare conține această valoare. Pentru a face asta, trebuie să dați click pe unul dintre
-               butoanele aflate sub imagine (cel din stânga sau cel din dreapta). Dacă alegerea dumneavoastră este
-               incorectă, un semnal zgomotos vă va semnala acest lucru, iar dacă alegerea este corectă, nu veți fi
-               semnalați.
-            </p>
-            <a href="#" ng-click="nextImage()"
-                     class="btn btn-primary btn-block btn-lg btn-default">Incepe</a>
+         <div class="child" ng-show="directionsShow">
+            <p class="regular-text">[[ messageText ]]</p>
+            <a href="#" ng-click="nextPage()"
+               class="btn btn-primary btn-block btn-lg btn-default">[[buttonText]]</a>
          </div>
 
          <div class="child" ng-show="imagesPrepareMsg">

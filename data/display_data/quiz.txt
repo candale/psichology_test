@@ -1,6 +1,25 @@
-This is a very nice quiz that you will take to make yourself usefull once in a while
-foarte putin sau deloc,putin,moderat,destul de mult,extrem de mult
-Interesat(ă)
-Distres
-Emoționat(ă)
+Acceasta este descrierea primului quiz. Trebuie sa fie neaparat pe o sigura linie. Foloseste sublime text (editor) cu Word Wrap setat la False. View->Word Wrap
+aici sunt,optiunuile,pentru quizul,curent separate prin virgula,o optinue nu poate sa aiba virgula in textul ei
+aci este prima intrebare
+aici este a doua intrebare
+aici este a treia intrebare
+aici este a patra intrebare
+si tot asa
+
+Acceasta este descrierea celui de-al doilea quiz. Quizurile sunte separate de catre o linie goala
+aici sunt,optiunuile,pentru quizul,curent separate prin virgula,o optinue nu poate sa aiba virgula in textul ei
+aci este prima intrebare
+aici este a doua intrebare
+aici este a treia intrebare
+aici este a patra intrebare
+si tot asa
+
+Acceasta este descrierea celui de-al doilea quiz. Quizurile sunte separate de catre o linie goala
+aici sunt,optiunuile,pentru quizul,curent separate prin virgula,o optinue nu poate sa aiba virgula in textul ei
+aci este prima intrebare
+aici este a doua intrebare
+aici este a treia intrebare
+aici este a patra intrebare
+si tot asa
+++++++++ la sfarsitul fisierului trebuie neaparat sa fie doua linii goale
 

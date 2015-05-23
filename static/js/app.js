@@ -4,6 +4,52 @@ PsihoApp.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
 });
 
+MESSAGES = {
+    INTRO: {
+        message: "În cadrul acestui experiment veți avea de realizat două sarcini care vor evalua două " +
+                "componente ale inteligenței dumneavoastră: capacitatea de a realiza raționamente perceptuale și " +
+                "verbale. Scopul cercetării este de a compara nivelul de inteligență între participanți, în funcție de " +
+                "anumite trăsături de personalitate pe care aceștia le dețin. Majoritatea oamenilor rezolvă aceste sarcini " +
+                "fără dificultăți majore. Durata acestora va depinde și de performanța dumneavoastră. Dacă nu sunt " +
+                "întrebări, apăsați butonul de începere.",
+        buttonText: "Incepe"
+    },
+    IMAGES: {
+        message: "În această sarcină vi se vor prezenta câteva serii de imagini. Fiecare imagine prezintă două " +
+                "chenare, unul în stânga, altul în dreapta. Chenarele conțin anumite caracteristici perceptuale. Aceste " +
+                "caracteristici reprezintă patru dimensiuni diferite (culoare, formă, literă, mărimea literei), fiecare " +
+                "dimensiune putând lua două valori distincte (verde/roșu, pătrat/cerc, A/T, literă mică/mare), așa cum " +
+                "puteți observa în exemplul de pe foaia din fața dumneavoastră." +
+                "Veți urmări patru serii de imagini. Pentru fiecare serie, " +
+                "am desemnat ca fiind corectă una din aceste opt valori menționate. La fiecare imagine, sarcina " +
+                "dumneavoastră va fi să alegeți care dintre cele două chenare conține această valoare. Pentru a face asta, " +
+                "aveți la dispoziție 15 secunde să dați click pe unul dintre butoanele aflate sub imagine (cel din stânga sau " +
+                "cel din dreapta). Dacă alegerea dumneavoastră este incorectă, un semnal zgomotos vă va semnala acest " +
+                "lucru, iar dacă alegerea este corectă, nu veți fi semnalați. Folosiți semnalul primit pentru a determina " +
+                "care este valoarea desemnată (verde/roșu, pătrat/cerc, A/T, literă mică/mare). Dacă aveți întrebări, " +
+                "adresați-le acum asistentului.",
+        buttonText: "Incepe"
+    },
+    ANAGRAMS: {
+        message: "În această sarcină, va trebui să rezolvați un număr de anagrame. Anagramele sunt șiruri de " +
+                "litere care trebuie reordonate pentru a forma un cuvânt. De exemplu, LGO este o anagramă pentru " +
+                "cuvântul GOL. Sarcina dumneavoastră este așadar aceea de a rearanja literele într-un cuvânt existent în " +
+                "limba română și de a trece răspunsul în chenarul aferent. Anagramele vor urma 3 niveluri de dificultate " +
+                "(scăzut – două cuvinte; mediu – două cuvinte; crescut – un cuvânt). Nu aveți o limită de timp, așa că " +
+                "încercați să rezolvați anagramele cât mai bine, iar în cazul în care doriți să treceți peste una dintre ele, " +
+                "aveți opțiunea de a sări peste. Rezolvarea acestei sarcini depinde de abilități similare sarcinii de la " +
+                "începutul acestui studiu." +
+                "Atenție: cuvintele nu conțin diacritice (ă, â, î, ș, ț - adică nu vor exista cuvinte precum fâș, șarpe, braț etc) " +
+                "și sunt fie substantive, fie adjective (deci nu conțin acțiuni). Dacă există vreo întrebare sau vreo " +
+                "roblemă, anunțați asistentul.",
+        buttonText: "Incepe"
+    },
+    PAUZA_ASISTENT: {
+        message: "Vă rugăm anunțați asistentul înainte să continuați.",
+        buttonText: "Continuați"
+    }
+}
+
 
 PsihoApp.factory('psihoService', ['$http', function($http) {
     var service = {};
@@ -60,19 +106,29 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     var lastAnagramTime = 0;
     var randomness = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var timerStarted = false;
+    var globalNextPage = "";
+    var globalNextPageCallback = null;
 
     var firstStress = null;
     var secondStress = null;
     $scope.selectedQuestion = '';
     $scope.timer_running = true;
     $scope.time = 0;
-    $scope.nameShow = true;
     $scope.series = 1;
     $scope.bgColor = "#0F9D58";
     $scope.imagesErrorMsg = 'Prea târziu';
     $scope.showErrorText = false;
     $scope.imagesError = false;
     $scope.registeredStress = 0;
+
+    function resetSliders() {
+        $scope.feeling = {};
+        $scope.feeling.descurajat = 1;
+        $scope.feeling.furios = 1;
+        $scope.feeling.ingrijorat = 1;
+        $scope.feeling.vinovat = 1;
+        $scope.feeling.trist = 1;
+    }
 
     function sendData() {
         data = {
@@ -182,6 +238,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
 
     }
     function showPage(page) {
+        $scope.directionsShow = false;
         $scope.anagramShow = false;
         $scope.nameShow = false;
         $scope.sliderShow = false;
@@ -232,10 +289,20 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
             case 'correctAnswer':
                 $scope.correctAnswer = true;
                 break;
-            case 'anagramsDirections':
-                $scope.anagramsDirectionsShow = true;
+            case 'directions':
+                $scope.directionsShow = true;
                 break;
         }
+    }
+
+    function setDirectionsCallbackInfo(nextPage, callback) {
+        globalNextPage = nextPage;
+        globalNextPageCallback = callback;
+    }
+
+    function setDirectionsText(message, buttonText) {
+        $scope.messageText = message;
+        $scope.buttonText = buttonText;
     }
 
     // ====================== init stuff ==================
@@ -253,6 +320,8 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
         images = res;
     });
     $scope.sound = ngAudio.load("/static/sounds/fail.mp3");
+    resetSliders();
+    showPage("name");
 
 
     // ====================== PAGES ========================
@@ -262,27 +331,36 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
             alert("Acest camp este obligatoriu");
             return;
         }
-        showPage('slider');
+
+        setDirectionsText(MESSAGES.INTRO.message, MESSAGES.INTRO.buttonText);
+        setDirectionsCallbackInfo("slider", null);
+        showPage("directions");
     }
 
     // =================== stress page ======================
     $scope.registerStress = function() {
         if(fromImages) {
-            secondStress = $scope.registeredStress;
-            showPage('anagramsDirections');
-        } else {
+            secondStress = $scope.feeling;
 
-            firstStress = $scope.registeredStress;
-            showPage('first_quiz');
+            showPage("first_quiz");
+        } else {
+            firstStress = $scope.feeling;
+            resetSliders();
+            setDirectionsCallbackInfo("", $scope.nextImage);
+            setDirectionsText(MESSAGES.IMAGES.message, MESSAGES.IMAGES.buttonText);
+            showPage('directions');
         }
         $scope.registeredStress = 0;
     }
 
-    $scope.answerAnagram = function(init) {
-        if(init == true) {
-            showPage('anagram');
-            return;
+    $scope.nextPage = function() {
+        showPage(globalNextPage);
+        if(globalNextPageCallback) {
+            globalNextPageCallback();
         }
+    }
+
+    $scope.answerAnagram = function() {
 
         if(!$scope.userAnagramInput) {
             alert("Campul este obligatoriu");
@@ -328,6 +406,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     }
 
     $scope.skipAnagram = function() {
+        $scope.userAnagramInput = "";
         anagrams[currentAnagramIndex].user_answer = ">> skipped <<";
         if(anagrams.length == currentAnagramIndex + 1) {
             lastAnagramTime = $scope.time;
@@ -357,7 +436,10 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
         }
         if(currentQuizIndex + 1 == first_quizes.length) {
             if(first_quiz) {
-                showPage('imagesDirections');
+                setDirectionsCallbackInfo("anagram", null);
+                $scope.messageText = MESSAGES.PAUZA_ASISTENT.message;
+                $scope.buttonText = MESSAGES.PAUZA_ASISTENT.buttonText;
+                showPage('directions');
                 first_quiz = false;
                 second_quiz = true;
             } else {
@@ -384,7 +466,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
                 $scope.showErrorText = false;
                 $scope.nextImage();
             }, 3000);
-        }, 30000);
+        }, 15000);
     }
 
     $scope.nextImage = function(buzz_enabled) {

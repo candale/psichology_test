@@ -72,10 +72,18 @@ def get_data():
         data['name'], datetime.datetime.now().strftime("%y-%M-%M %H-%M-%S"))
     with open(file_name, 'w') as user_file:
         user_file.write("Nume,{}\n".format(data['name'].encode('utf8')))
-        user_file.write(
-            "Nivel de stres initial,{}\n".format(data['first_stress']))
-        user_file.write(
-            "Nivel de stres dupa test,{}\n".format(data['second_stress']))
+        user_file.write("Prima masurare a emotiilor\n")
+
+        for key in data['first_stress']:
+            user_file.write("{},{}\n".format(
+                key.title(), data['first_stress'][key]).encode('utf8'))
+        user_file.write("\n")
+
+        user_file.write("A doua masurare a emotiile\n")
+        for key in data['second_stress']:
+            user_file.write("{},{}\n".format(
+                key.title(), data['second_stress'][key]).encode('utf8'))
+        user_file.write("\n")
 
         user_file.write("\n\nRezultate formulare\n\nPrimul formular\n\n")
         user_file.write("Intrebare,Raspunsul subiectului")
