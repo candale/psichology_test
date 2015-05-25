@@ -157,7 +157,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
     function startTimer() {
         timerStarted = true;
         intervalId = $window.setInterval(function() {
-            if($scope.time == 600000) {
+            if($scope.time > 600) {
                 lastAnagramTime = $scope.time;
                 $scope.imagesErrorMsg = 'Prea târziu';
                 $scope.showErrorText = true;
@@ -169,6 +169,7 @@ PsihoApp.controller('AnagramController', ['$scope', 'psihoService', '$window', '
                     showPage("second_quiz");
                     $scope.showErrorText = false;
                 }, 1000);
+                stopTimer();
             }
             $scope.time = $scope.time + 1;
             $scope.$apply();
